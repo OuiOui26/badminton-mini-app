@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('mainPage');
 });
 
 Route::get('/vue-page', function () {
-    return Inertia::render('VuePage');
+    return Inertia::render('mainPage');
 });
