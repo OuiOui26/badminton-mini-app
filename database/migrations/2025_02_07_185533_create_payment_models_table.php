@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('court_rate', 8, 2);
             $table->integer('shuttle_num');
             $table->decimal('shuttle_rate', 8, 2);
-            $table->integer('players')->nullable();
             $table->decimal('total_cost', 8, 2);
             $table->decimal('payment_per_person', 8, 2);
             $table->timestamps();

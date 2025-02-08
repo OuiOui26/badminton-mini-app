@@ -3,17 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Player extends Model
 {
     use HasFactory;
 
+    protected $table = 'players';
+
     protected $fillable = [
-        'payment_id', 'player_name', 'paid'
+        'player_name',
     ];
 
-    public function payment()
+    public function payments()
     {
-        return $this->belongsTo(Payment::class);
+        return $this->belongsToMany(Payment::class, 'payment_player')->withPivot('paid')->withTimestamps();
     }
+
 }
