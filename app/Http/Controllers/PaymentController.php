@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use App\Models\PaymentModel;
+use App\Http\Requests\PaymentsRequest;
+use App\Http\Resources\PaymentResource;
 
 class PaymentController extends Controller
 {
@@ -11,7 +18,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('CreatePayment');
     }
 
     /**
@@ -25,17 +32,42 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PaymentsRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        Log::info('Received Form Data:', $validated);
+
+        $totalCourtCost = $validated['court_hours'] * $validated['court_rate'];
+        $totalShuttleCost = $validated['shuttle_num'] * $validated['shuttle_rate'];
+        $totalCost = $totalCourtCost + $totalShuttleCost;
+        $paymentPerPerson = $totalCost / $validated['players'];
+
+        $payment = PaymentModel::create([
+            'court_hours' => $validated['court_hours'],
+            'court_rate' => $validated['court_rate'],
+            'shuttle_num' => $validated['shuttle_num'],
+            'shuttle_rate' => $validated['shuttle_rate'],
+            'total_cost' => $totalCost,
+            'payment_per_person' => $paymentPerPerson, 
+            'date' => now(), 
+        ]);
+
+        Log::info('Payment Created:', ['payment_id' => $payment->id]);
+
+        return Redirect::route('payments.show', ['payment' => $payment->id])
+        ->with('success', 'Payment recorded successfully!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(PaymentModel $payment)
     {
-        //
+        return Inertia::render('ShowPayments', [
+            'payment' => new PaymentResource($payment),
+            'flash' => session('success'),
+        ]);
     }
 
     /**

@@ -2,12 +2,10 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
-    return Inertia::render('mainPage');
+    return redirect()->route('payments.index');
 });
 
-Route::get('/vue-page', function () {
-    return Inertia::render('mainPage');
-});
+Route::resource('payments', PaymentController::class);
