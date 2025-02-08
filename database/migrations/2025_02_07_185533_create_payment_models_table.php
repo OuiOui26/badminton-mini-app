@@ -11,8 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_models', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->date('date')->nullable();
+            $table->integer('court_hours');
+            $table->decimal('court_rate', 8, 2);
+            $table->integer('shuttle_num');
+            $table->decimal('shuttle_rate', 8, 2);
+            $table->integer('players')->nullable();
+            $table->decimal('total_cost', 8, 2);
+            $table->decimal('payment_per_person', 8, 2);
             $table->timestamps();
         });
     }
