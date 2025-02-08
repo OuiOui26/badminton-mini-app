@@ -12,18 +12,21 @@ class PaymentResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+
+    public static $wrap = null;
+
+    public function toArray($request)
     {
         return [
             'id' => $this->id,
-            'date' => $this->date->format('Y-m-d'),
+            'date' => $this->date,
             'court_hours' => $this->court_hours,
             'court_rate' => $this->court_rate,
             'shuttle_num' => $this->shuttle_num,
             'shuttle_rate' => $this->shuttle_rate,
             'total_cost' => $this->total_cost,
             'payment_per_person' => $this->payment_per_person,
-            'created_at' => $this->created_at->toDateTimeString(),
+            'created_at' => $this->created_at,
         ];
     }
 }

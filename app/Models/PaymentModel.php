@@ -22,13 +22,12 @@ class PaymentModel extends Model
         'court_rate', 
         'shuttle_num',
         'shuttle_rate',
-        // 'players',
         'total_cost',
         'payment_per_person'
     ];
 
-    // public function players()
-    // {
-    //     return $this->hasMany(Player::class);
-    // }
+    public function players()
+    {
+        return $this->belongsToMany(Player::class, 'payment_player')->withPivot('paid')->withTimestamps();
+    }
 }

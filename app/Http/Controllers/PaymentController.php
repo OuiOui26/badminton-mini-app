@@ -43,15 +43,16 @@ class PaymentController extends Controller
         $totalCost = $totalCourtCost + $totalShuttleCost;
         $paymentPerPerson = $totalCost / $validated['players'];
 
-        $payment = PaymentModel::create([
-            'court_hours' => $validated['court_hours'],
-            'court_rate' => $validated['court_rate'],
-            'shuttle_num' => $validated['shuttle_num'],
-            'shuttle_rate' => $validated['shuttle_rate'],
-            'total_cost' => $totalCost,
-            'payment_per_person' => $paymentPerPerson, 
-            'date' => now(), 
-        ]);
+        $payment = new PaymentModel();
+        $payment->court_hours = $validated['court_hours'];
+        $payment->court_rate = $validated['court_rate'];
+        $payment->shuttle_num = $validated['shuttle_num'];
+        $payment->shuttle_rate = $validated['shuttle_rate'];
+        $payment->total_cost = $totalCost;
+        $payment->payment_per_person = $paymentPerPerson;
+        $payment->date = now();
+
+        $payment->save();
 
         Log::info('Payment Created:', ['payment_id' => $payment->id]);
 

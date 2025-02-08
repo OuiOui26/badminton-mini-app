@@ -6,7 +6,7 @@ import "../css/app.css";
 InertiaProgress.init();
 
 createInertiaApp({
-  resolve: name => import(`./pages/${name}.vue`),
+  resolve: name => import(`./Pages/${name}.vue`),
   setup({ el, App, props }) {
     createApp({ render: () => h(App, props) }).mount(el);
   },
