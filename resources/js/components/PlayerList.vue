@@ -4,6 +4,7 @@ import { defineProps } from "vue";
 const props = defineProps({
   players: Array,
 });
+
 </script>
 
 <template>
