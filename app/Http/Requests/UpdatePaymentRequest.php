@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PaymentsRequest extends FormRequest
+class UpdatePaymentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,10 +28,9 @@ class PaymentsRequest extends FormRequest
             'shuttle_rate' => 'required|numeric|min:0',
             'total_cost' => 'numeric',
             'payment_per_person' => 'numeric',
-            'players' => ['required', 'array', 'min:1'], 
-            'players.*' => ['exists:players,id'], 
-            'players.*.id' => ['sometimes', 'exists:players,id'], 
-            'players.*.pivot.paid' => ['boolean'], 
+            'players' => ['sometimes', 'array'],
+            'players.*.id' => ['required', 'exists:players,id'],
+            'players.*.paid' => ['required', 'boolean'], 
         ];
     }
 }

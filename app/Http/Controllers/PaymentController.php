@@ -8,11 +8,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\PaymentModel;
+use App\Models\Player;
 use App\Http\Requests\PaymentsRequest;
+use App\Http\Requests\UpdatePaymentRequest;
 use App\Http\Resources\PaymentResource;
+use App\Http\Resources\PlayerResource;
 
 class PaymentController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -70,8 +74,10 @@ class PaymentController extends Controller
      */
     public function show(PaymentModel $payment)
     {
+        $players = $payment->players()->withPivot('paid')->get();
         return Inertia::render('ShowPayments', [
             'payment' => new PaymentResource($payment),
+            'players' => PlayerResource::collection($players)->toArray(request()), 
             'flash' => session('success'),
         ]);
     }
@@ -87,9 +93,29 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePaymentRequest $request, PaymentModel $payment)
     {
-        //
+        $validated = $request->validated();
+
+        $payment->update([
+            'court_hours' => $validated['court_hours'],
+            'court_rate' => $validated['court_rate'],
+            'shuttle_num' => $validated['shuttle_num'],
+            'shuttle_rate' => $validated['shuttle_rate'],
+            'total_cost' => $validated['total_cost'],
+            'payment_per_person' => $validated['payment_per_person'],
+        ]);
+    
+        if (!empty($validated['players'])) {
+            foreach ($validated['players'] as $playerData) {
+                $payment->players()->updateExistingPivot(
+                    $playerData['id'],
+                    ['paid' => $playerData['paid']]
+                );
+            }
+        }
+    
+        return response()->json(['message' => 'Payment updated successfully']);
     }
 
     /**
@@ -114,7 +140,7 @@ class PaymentController extends Controller
     public function getPlayers(PaymentModel $payment)
     {
         $players = $payment->players()->get();
-    
+        
         return response()->json([
             'success' => true,
             'players' => $players
