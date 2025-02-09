@@ -26,6 +26,8 @@ class PaymentsRequest extends FormRequest
             'court_rate' => 'required|numeric|min:0',
             'shuttle_num' => 'required|integer|min:0',
             'shuttle_rate' => 'required|numeric|min:0',
+            'players' => ['required', 'array', 'min:1'], 
+            'players.*' => ['exists:players,id'], 
         ];
     }
 }

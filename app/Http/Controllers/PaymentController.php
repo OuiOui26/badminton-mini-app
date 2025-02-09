@@ -35,13 +35,15 @@ class PaymentController extends Controller
     public function store(PaymentsRequest $request)
     {
         $validated = $request->validated();
-
+        $players = $validated['players'] ?? []; 
         Log::info('Received Form Data:', $validated);
 
         $totalCourtCost = $validated['court_hours'] * $validated['court_rate'];
         $totalShuttleCost = $validated['shuttle_num'] * $validated['shuttle_rate'];
         $totalCost = $totalCourtCost + $totalShuttleCost;
-        $paymentPerPerson = $totalCost / $validated['players'];
+        
+        $playerCount = count($players);
+        $paymentPerPerson = $playerCount > 0 ? $totalCost / $playerCount : 0;
 
         $payment = new PaymentModel();
         $payment->court_hours = $validated['court_hours'];
@@ -51,8 +53,11 @@ class PaymentController extends Controller
         $payment->total_cost = $totalCost;
         $payment->payment_per_person = $paymentPerPerson;
         $payment->date = now();
-
-        $payment->save();
+        $payment->save(); 
+        
+        if (!empty($validated['players'])) {
+            $payment->players()->attach($validated['players'], ['paid' => 0]);
+        }
 
         Log::info('Payment Created:', ['payment_id' => $payment->id]);
 
@@ -94,4 +99,27 @@ class PaymentController extends Controller
     {
         //
     }
+
+    public function addPlayer(Request $request, PaymentModel $payment)
+    {
+        $validated = $request->validate([
+            'player_id' => 'required|exists:players,id',
+        ]);
+    
+        $payment->players()->attach($validated['player_id']);
+    
+        return back()->with('success', 'Player added successfully!');
+    }
+
+    public function getPlayers(PaymentModel $payment)
+    {
+        $players = $payment->players()->get();
+    
+        return response()->json([
+            'success' => true,
+            'players' => $players
+        ]);
+    }
+
+    
 }

@@ -11,3 +11,6 @@ Route::get('/', function () {
 
 Route::resource('payments', PaymentController::class);
 Route::resource('players', PlayerController::class);
+
+Route::get('/payments/{payment}/players', [PaymentController::class, 'getPlayers']);
+Route::post('/payments/{payment}/add-player', [PaymentController::class, 'addPlayer']);
