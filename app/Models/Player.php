@@ -17,7 +17,9 @@ class Player extends Model
 
     public function payments()
     {
-        return $this->belongsToMany(Payment::class, 'payment_player')->withPivot('paid')->withTimestamps();
+        return $this->belongsToMany(PaymentModel::class, 'payment_player', 'player_id', 'payment_id')
+                    ->withPivot('paid')
+                    ->withTimestamps();
     }
 
 }

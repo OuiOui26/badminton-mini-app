@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
-import PlayerModal from '@/components/PlayerModal.vue';
+import PlayerModal from '@/components/CreatePlayerModal.vue';
 
 const goToCreatePayments = () => {
   router.visit('payments');

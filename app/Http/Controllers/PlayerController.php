@@ -15,7 +15,7 @@ class PlayerController extends Controller
      */
     public function index()
     {
-
+        return response()->json(Player::all());
     }
 
     /**
