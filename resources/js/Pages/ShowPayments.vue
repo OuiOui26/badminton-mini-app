@@ -12,18 +12,21 @@ const props = defineProps<{
   flash?: string;
 }>();
 
-  console.log(props.players);
+
+const paymentState = ref({ ...props.payment });
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
   return format(new Date(dateString), 'dd/MM/yyyy');
 };
 
-const playersState = ref(props.players.map(player => ({
-  id: player.id,
-  player_name: player.player_name,
-  paid: !!player.pivot?.paid 
-})));
+const playersState = ref(
+  props.players.map((player) => ({
+    id: player.id,
+    player_name: player.player_name,
+    paid: !!player.pivot?.paid,
+  }))
+);
 
 const togglePaid = (playerId: number) => {
   const player = playersState.value.find(p => p.id === playerId);
