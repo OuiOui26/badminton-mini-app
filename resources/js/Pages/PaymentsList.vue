@@ -27,12 +27,14 @@ const showPayment = (id) => {
 </script>
 
 <template>
-    <div class="p-5">
-      <button @click="goBack" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Back</button>
+    <div class="max-w-3xl mx-auto my-12 p-8 bg-white shadow-lg rounded-xl">
+      <button @click="goBack" class="flex items-center gap-2 text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-gray-100 transition">
+      ⬅ Back
+    </button>
   
-      <h1 class="text-xl font-bold">Payments List</h1>
+    <h1 class="text-3xl font-bold text-green-700 text-center my-2">Payment List</h1>
   
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-2 gap-2 p-4">
         <div v-for="payment in payments" :key="payment.id" class="border p-4 mt-4 bg-green-600 text-white rounded-lg">
           <div class="flex justify-between">
             <h2 class="text-lg font-semibold">Session #{{ payment.id }}</h2>
@@ -45,7 +47,7 @@ const showPayment = (id) => {
           <p><strong>Total Cost:</strong> {{ payment.total_cost }}</p>
           <p><strong>Payment Per Person:</strong> {{ payment.payment_per_person }}</p>
           
-          <button @click="showPayment(payment.id)" class="bg-white rounded-lg text-black p-2">View Session</button>
+          <button @click="showPayment(payment.id)" class="w-full bg-white rounded-lg text-green-600 font-bold p-2 mt-4">View Session</button>
         </div>
       </div>
     </div>
