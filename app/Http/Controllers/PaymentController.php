@@ -99,13 +99,18 @@ class PaymentController extends Controller
     {
         $validated = $request->validated();
 
+        $totalCost = ($validated['court_hours'] * $validated['court_rate']) + ($validated['shuttle_num'] * $validated['shuttle_rate']);
+
+        $numPlayers = $payment->players()->count();  
+        $paymentPerPerson = $numPlayers > 0 ? $totalCost / $numPlayers : 0;
+    
         $payment->update([
             'court_hours' => $validated['court_hours'],
             'court_rate' => $validated['court_rate'],
             'shuttle_num' => $validated['shuttle_num'],
             'shuttle_rate' => $validated['shuttle_rate'],
-            'total_cost' => $validated['total_cost'],
-            'payment_per_person' => $validated['payment_per_person'],
+            'total_cost' => $totalCost,
+            'payment_per_person' => $paymentPerPerson,
         ]);
     
         if (!empty($validated['players'])) {
@@ -117,7 +122,7 @@ class PaymentController extends Controller
             }
         }
     
-        return to_route('payments.index')->with('success', 'Payment updated successfully');
+        return Redirect::back()->with('success', 'payment updated Successfully');
     }
 
     /**
