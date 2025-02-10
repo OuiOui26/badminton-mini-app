@@ -38,28 +38,36 @@ const formattedPlayers = computed(() => playersState.value.map(player => ({
 
 
 const updatePayment = () => {
-  router.put(`/payments/${props.payment.id}`, {
+  router.post(`/payments/${props.payment.id}`, {
+    _method: 'PUT', 
     court_hours: props.payment.court_hours,
     court_rate: props.payment.court_rate,
     shuttle_num: props.payment.shuttle_num,
     shuttle_rate: props.payment.shuttle_rate,
     total_cost: props.payment.total_cost,
     payment_per_person: props.payment.payment_per_person,
-    players: formattedPlayers.value, 
-  }, {
-    preserveState: true,
-    preserveScroll: true,
-    headers: {
-      'Accept': 'application/json',
-    },
-    onSuccess: () => {
-      console.log('Payment updated successfully!');
-    },
-    onError: (errors) => {
-      console.error(errors);
-    }
+    players: formattedPlayers.value,
   });
 };
+
+const deletePayment = (id) => {
+  if (confirm('Are you sure you want to delete this payment?')) {
+    router.post(`/payments/${id}`, {
+      _method: 'DELETE', 
+    }, {
+      preserveState: false, 
+      preserveScroll: true,
+      onSuccess: () => {
+        alert('Payment deleted successfully!');
+      },
+      onError: (errors) => {
+        console.error('Error deleting payment:', errors);
+      },
+    });
+  }
+};
+
+
 </script>
 
 <template>
@@ -107,4 +115,5 @@ const updatePayment = () => {
       <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Update</button>
     </div>
   </form>
+  <button @click="deletePayment(payment.id)" class="bg-red-600 rounded-lg text-white p-2">Delete Session</button>
 </template>
