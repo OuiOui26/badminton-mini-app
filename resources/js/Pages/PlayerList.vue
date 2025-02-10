@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineProps, ref } from 'vue';
+import { defineProps, ref } from 'vue';
 import type { Player } from '../types/player';
 import PlayerModal from '../components/CreatePlayerModal.vue';
 import BackButton from '../components/BackButton.vue';
@@ -22,11 +22,11 @@ const closeCreateModal = () => {
 <template>
   <div class="w-1/2 flex flex-col mx-auto mt-12 jusity-center items-center mt-4 bg-white p-4 shadow-md rounded-lg">
     <div class="flex w-full justify-between">
-      
+
       <BackButton />
       
-      <button @click="openCreateModal" class="bg-white text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-green-200">
-        Create New Player
+      <button @click="openCreateModal" class="border border-1 bg-white text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-green-200">
+        ➕ Create New Player
       </button>
 
     </div>
