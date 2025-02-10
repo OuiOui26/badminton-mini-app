@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { computed, defineProps, ref } from 'vue';
+import { format } from 'date-fns';
 import { router } from '@inertiajs/vue3';
+import { computed, defineProps, ref } from 'vue';
+import BackButton from '../components/BackButton.vue';
 import type { Payment } from '../types/payment';
 import type { Player } from '../types/player';
-import { format } from 'date-fns';
 
 const props = defineProps<{
   payment: Payment;
   players: Player[];
   flash?: string;
 }>();
+
+  console.log(props.players);
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -21,12 +24,6 @@ const playersState = ref(props.players.map(player => ({
   player_name: player.player_name,
   paid: !!player.pivot?.paid 
 })));
-
-
-const goBack = () => {
-  router.visit('/payments');
-};
-
 
 const togglePaid = (playerId: number) => {
   const player = playersState.value.find(p => p.id === playerId);
@@ -78,9 +75,7 @@ const deletePayment = (id) => {
 <template>
   <div class="w-full max-w-2xl mx-auto p-8 mt-10 bg-white shadow-lg rounded-xl">
 
-    <button @click="goBack" class="flex items-center gap-2 text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-green-100 transition">
-      ⬅ Back
-    </button>
+    <BackButton />
 
 
     <h1 class="text-3xl font-bold text-gray-800 text-center mt-4">Payment Details</h1>
@@ -123,9 +118,9 @@ const deletePayment = (id) => {
         <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Total Cost</h3>
         <div class="flex flex-col space-y-2">
           <label class="text-sm font-medium text-gray-600">Total Cost</label>
-          <input type="number" v-model="props.payment.total_cost" class="input-field">
+          <input type="number" v-model="props.payment.total_cost" class="input-field" disabled>
           <label class="text-sm font-medium text-gray-600">Payment Per Person</label>
-          <input type="number" v-model="props.payment.payment_per_person" class="input-field">
+          <input type="number" v-model="props.payment.payment_per_person" class="input-field" disabled>
         </div>
       </div>
 
