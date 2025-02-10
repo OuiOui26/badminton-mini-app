@@ -5,6 +5,7 @@ const emit = defineEmits(["close", "add-player"]);
 const players = ref([]);
 const selectedPlayers = ref([]);
 const selectAll = ref(false);
+const searchQuery = ref("");
 
 const fetchPlayers = async () => {
   try {
@@ -31,6 +32,14 @@ const addPlayers = () => {
   emit("add-player", selectedPlayers.value);
   emit("close");
 };
+
+const filteredPlayers = computed(() => {
+  if (!searchQuery.value) return players.value;
+  return players.value.filter(player =>
+    player.player_name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
 </script>
 
 <template>
@@ -38,13 +47,21 @@ const addPlayers = () => {
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
       <h2 class="text-xl font-bold mb-4">Select Players</h2>
       
-      <div class="flex items-center space-x-2 p-2 border-b border-gray-300">
+      <input 
+        v-model="searchQuery" 
+        type="text" 
+        placeholder="Search players" 
+        class="w-full p-2 mb-3 border border-gray-300 rounded"
+      />
+
+      <div v-if="filteredPlayers.length" class="flex items-center space-x-2 p-2 border-b border-gray-300">
         <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
         <span class="font-semibold">Select All</span>
       </div>
 
-      <div class="max-h-60 overflow-y-auto">
-        <label v-for="player in players" :key="player.id" class="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer">
+
+      <div v-if="filteredPlayers.length" class="max-h-60 overflow-y-auto">
+        <label v-for="player in filteredPlayers" :key="player.id" class="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer">
           <input 
             type="checkbox" 
             v-model="selectedPlayers" 
