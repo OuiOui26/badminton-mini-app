@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Requests\PlayerRequest;
 use App\Models\Player;
+use App\Http\Resources\PlayerResource;
+use App\Http\Requests\PlayerRequest;
+
 
 class PlayerController extends Controller
 {
@@ -46,7 +48,9 @@ class PlayerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Inertia::render('PlayerList', [
+            'players' => PlayerResource::collection(Player::all())->toArray(request()),
+        ]);
     }
 
     /**

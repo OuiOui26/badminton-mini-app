@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useForm, router } from "@inertiajs/vue3";
 import PlayerModal from "../components/SelectPlayers.vue";  
+import BackButton from "../components/BackButton.vue";
 
 const form = useForm({
   court_hours: 1,
@@ -54,9 +55,7 @@ const submitForm = () => {
 <template>
   <div class="max-w-3xl mx-auto my-12 p-8 bg-white shadow-lg rounded-xl">
 
-    <button @click="goBack" class="flex items-center gap-2 text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-gray-100 transition">
-      ⬅ Back
-    </button>
+    <BackButton />
 
     <h1 class="text-3xl font-bold text-green-700 text-center my-6">Session Details</h1>
 
