@@ -4,6 +4,9 @@ import { router } from '@inertiajs/vue3';
 import PlayerModal from '@/components/CreatePlayerModal.vue';
 
 const goToCreatePayments = () => {
+  router.visit('payments/create');
+};
+const showAllPayments = () => {
   router.visit('payments');
 };
 
@@ -26,6 +29,9 @@ const closeModal = () => {
     <div class="flex flex-col gap-5 mt-5">
       <button @click="goToCreatePayments" class="bg-white text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-gray-200">
         Create New Session
+      </button>
+      <button @click="showAllPayments" class="bg-white text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-gray-200">
+        Show All Sessions
       </button>
       
       <button @click="openModal" class="bg-white text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-gray-200">

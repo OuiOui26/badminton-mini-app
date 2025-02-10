@@ -22,7 +22,11 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        return Inertia::render('CreatePayment');
+         $payments = PaymentModel::latest()->get();
+        return Inertia::render('PaymentsList', [
+            'payments' => PaymentResource::collection(PaymentModel::all())->resolve()
+        ]);
+        
     }
 
     /**
@@ -30,7 +34,7 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('CreatePayment');
     }
 
     /**
@@ -62,8 +66,6 @@ class PaymentController extends Controller
         if (!empty($validated['players'])) {
             $payment->players()->attach($validated['players'], ['paid' => 0]);
         }
-
-        Log::info('Payment Created:', ['payment_id' => $payment->id]);
 
         return Redirect::route('payments.show', ['payment' => $payment->id])
         ->with('success', 'Payment recorded successfully!');
@@ -115,15 +117,16 @@ class PaymentController extends Controller
             }
         }
     
-        return response()->json(['message' => 'Payment updated successfully']);
+        return to_route('payments.index')->with('success', 'Payment updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(PaymentModel $payment)
     {
-        //
+        $payment->delete();
+        return redirect()->route('payments.index');
     }
 
     public function addPlayer(Request $request, PaymentModel $payment)
