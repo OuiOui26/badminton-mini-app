@@ -52,61 +52,70 @@ const submitForm = () => {
 </script>
 
 <template>
-  <div class="flex flex-col p-2 justify-center rounded-xl items-center bg-green-400 w-[50%] mx-auto my-10">
-    <div class="flex flex-col flex-start w-full">
-      <button @click="goBack" class="w-[10%] bg-white text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-gray-200">
-        Back
-      </button>
-    </div>
+  <div class="max-w-3xl mx-auto my-12 p-8 bg-white shadow-lg rounded-xl">
 
-    <h1 class="text-2xl font-bold text-white">Create New Session</h1>
+    <button @click="goBack" class="flex items-center gap-2 text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-gray-100 transition">
+      ⬅ Back
+    </button>
 
-    <form @submit.prevent="submitForm" class="grid grid-cols-2 gap-4 w-full rounded-xl">
-      <div class="flex flex-col p-5">
-        <h2 class="bg-green-600 text-white rounded-lg text-center font-semibold py-3">Court Fees</h2>
-        <div class="flex flex-col items-center gap-2 pt-2">
-          <label for="court_hours">Court Hours</label>
-          <input min="0" v-model="form.court_hours" class="rounded-lg text-center" type="number" name="court_hours" id="court_hours">
+    <h1 class="text-3xl font-bold text-green-700 text-center my-6">Session Details</h1>
 
-          <label for="court_rate">Rate of Court</label>
-          <input min="0" v-model="form.court_rate" class="rounded-lg text-center" type="number" name="court_rate" id="court_rate">
+    <form @submit.prevent="submitForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="p-5 bg-green-200 rounded-lg shadow-sm">
+        <h2 class="text-xl font-semibold text-green-800 text-center mb-4">🏸 Court Fees</h2>
+        <div class="flex flex-col gap-3">
+          <label for="court_hours" class="text-sm font-semibold">Court Hours</label>
+          <input min="0" v-model="form.court_hours" class="border p-2 rounded-lg text-center focus:ring-2 focus:ring-green-400" type="number">
+
+          <label for="court_rate" class="text-sm font-semibold">Rate per Hour</label>
+          <input min="0" v-model="form.court_rate" class="border p-2 rounded-lg text-center focus:ring-2 focus:ring-green-400" type="number">
         </div>
       </div>
 
-      <div class="flex flex-col p-5">
-        <h2 class="bg-green-600 text-white rounded-lg text-center font-semibold py-3">Shuttlecock Fees</h2>
-        <div class="flex flex-col items-center gap-2 pt-2">
-          <label for="shuttle_num">Shuttles Used</label>
-          <input min="0" v-model="form.shuttle_num" class="rounded-lg text-center" type="number" name="shuttle_num" id="shuttle_num">
 
-          <label for="shuttle_rate">Price per shuttle</label>
-          <input min="0" v-model="form.shuttle_rate" class="rounded-lg text-center" type="number" name="shuttle_rate" id="shuttle_rate">
+      <div class="p-5 bg-green-200 rounded-lg shadow-sm">
+        <h2 class="text-xl font-semibold text-green-800 text-center mb-4">🏸 Shuttlecock Fees</h2>
+        <div class="flex flex-col gap-3">
+          <label for="shuttle_num" class="text-sm font-semibold">Shuttles Used</label>
+          <input min="0" v-model="form.shuttle_num" class="border p-2 rounded-lg text-center focus:ring-2 focus:ring-green-400" type="number">
+
+          <label for="shuttle_rate" class="text-sm font-semibold">Price per Shuttle</label>
+          <input min="0" v-model="form.shuttle_rate" class="border p-2 rounded-lg text-center focus:ring-2 focus:ring-green-400" type="number">
         </div>
       </div>
 
-    <div class="flex flex-col p-5">
-        <h2 class="bg-green-600 text-white rounded-lg text-center font-semibold py-3">Players</h2>
-        <div class="flex flex-col items-center gap-2 pt-2">
-          <button type="button" @click="openPlayerModal" class="bg-white text-green-600 font-bold px-2 mt-2 rounded-lg hover:bg-gray-200">
-            Select Players
-          </button>
 
-          <div v-if="selectedPlayers.length" class="mt-4 w-full">
-            <h3 class="text-white text-lg font-semibold">Selected Players:</h3>
-            <ul class="bg-white p-2 rounded w-full">
-              <li v-for="player in selectedPlayers" :key="player.id" class="flex justify-between items-center p-1 border-b">
-                <span>{{ player.player_name }}</span>
-                <button @click="removePlayer(player.id)" class="text-red-600 text-sm">Remove</button>
-              </li>
-            </ul>
-          </div>
-
-          <button type="submit" class="bg-white text-green-600 font-bold px-2 mt-5 rounded-lg hover:bg-gray-200">
-            Create Payment
+      <div class="md:col-span-2 p-5 bg-green-200 rounded-lg shadow-sm">
+        <h2 class="text-xl font-semibold text-green-800 text-center mb-4">👥 Players</h2>
+        
+        <div class="flex justify-center">
+          <button type="button" @click="openPlayerModal" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition">
+            ➕ Select Players
           </button>
         </div>
+
+
+        <div v-if="selectedPlayers.length" class="mt-4 bg-white p-4 rounded-lg shadow-sm">
+          <h3 class="text-lg font-semibold text-green-700 mb-2">Selected Players:</h3>
+          <ul class="divide-y divide-gray-200">
+            <li v-for="player in selectedPlayers" :key="player.id" class="flex justify-between items-center py-2">
+              <span class="text-gray-800">{{ player.player_name }}</span>
+              <button @click="removePlayer(player.id)" class="text-red-500 hover:text-red-700 transition">✖ Remove</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+  
+      <div class="md:col-span-2 flex justify-center">
+        <button type="submit" class="bg-green-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-700 transition">
+          ✅ Create Payment
+        </button>
       </div>
     </form>
+
+
     <PlayerModal v-if="showPlayerModal" @close="showPlayerModal = false" @add-player="addPlayer" />
   </div>
 </template>
