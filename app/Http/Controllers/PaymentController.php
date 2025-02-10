@@ -6,7 +6,6 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
 use App\Models\PaymentModel;
 use App\Models\Player;
 use App\Http\Requests\PaymentsRequest;
@@ -67,7 +66,7 @@ class PaymentController extends Controller
             $payment->players()->attach($validated['players'], ['paid' => 0]);
         }
 
-        return Redirect::route('payments.show', ['payment' => $payment->id])
+        return redirect()->route('payments.show', ['payment' => $payment->id])
         ->with('success', 'Payment recorded successfully!');
     }
 
@@ -122,7 +121,7 @@ class PaymentController extends Controller
             }
         }
     
-        return Redirect::back()->with('success', 'payment updated Successfully');
+        return redirect()->back()->with('success', 'Payment Updated Successfully');
     }
 
     /**
