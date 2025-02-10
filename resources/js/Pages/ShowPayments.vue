@@ -3,6 +3,7 @@ import { computed, defineProps, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import type { Payment } from '../types/payment';
 import type { Player } from '../types/player';
+import { format } from 'date-fns';
 
 const props = defineProps<{
   payment: Payment;
@@ -10,6 +11,10 @@ const props = defineProps<{
   flash?: string;
 }>();
 
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  return format(new Date(dateString), 'dd/MM/yyyy');
+};
 
 const playersState = ref(props.players.map(player => ({
   id: player.id,
@@ -71,49 +76,85 @@ const deletePayment = (id) => {
 </script>
 
 <template>
-  <button @click="goBack" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Back</button>
+  <div class="w-full max-w-2xl mx-auto p-8 mt-10 bg-white shadow-lg rounded-xl">
 
-  <form @submit.prevent="updatePayment">
-    <div class="w-1/2 mx-auto p-5 pt-10 mt-10 flex flex-col items-center bg-white shadow-md rounded-lg">
-      <h1 class="text-2xl font-bold text-gray-800">Payment Details</h1>
-
-      <div v-if="flash" class="bg-green-500 text-white p-2 mt-4 rounded-md">
-        {{ flash }}
-      </div>
+    <button @click="goBack" class="flex items-center gap-2 text-green-600 font-bold py-2 px-4 rounded-lg hover:bg-green-100 transition">
+      ⬅ Back
+    </button>
 
 
-      <div class="mt-5">
-        <span><strong>Court Hours:</strong></span>
-        <input type="text" v-model="props.payment.court_hours" class="pr-4"><br>
-
-        <span><strong>Court Rate:</strong></span>
-        <input type="text" v-model="props.payment.court_rate" class="pr-4"><br>
-
-        <span><strong>Shuttle Num:</strong></span>
-        <input type="text" v-model="props.payment.shuttle_num" class="pr-4"><br>
-
-        <span><strong>Shuttle Rate:</strong></span>
-        <input type="text" v-model="props.payment.shuttle_rate" class="pr-4"><br>
-
-        <span><strong>Total Cost:</strong></span>
-        <input type="text" v-model="props.payment.total_cost" class="pr-4"><br>
-
-        <span><strong>Payment Per Person:</strong></span>
-        <input type="text" v-model="props.payment.payment_per_person" class="pr-4"><br>
-      </div>
+    <h1 class="text-3xl font-bold text-gray-800 text-center mt-4">Payment Details</h1>
+    <h2 class="text-lg text-gray-600 text-center mt-2">Date: {{ formatDate(props.payment.date) }}</h2>
 
 
-      <div v-if="playersState.length" class="grid grid-cols-3 mt-5">
-        <div v-for="player in playersState" :key="player.id" class="mb-2">
-          <label class="flex items-center space-x-2">
-            <input type="checkbox" :checked="player.paid" @change="togglePaid(player.id)">
-            <span>{{ player.player_name }}</span>
-          </label>
+    <div v-if="flash" class="bg-green-500 text-white p-3 mt-4 rounded-md text-center">
+      {{ flash }}
+    </div>
+
+
+    <form @submit.prevent="updatePayment" class="mt-6 space-y-4">
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="bg-green-100 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Court Fees</h3>
+          <div class="flex flex-col space-y-2">
+            <label class="text-sm font-medium text-gray-600">Court Hours</label>
+            <input type="number" v-model="props.payment.court_hours" class="input-field">
+            
+            <label class="text-sm font-medium text-gray-600">Court Rate</label>
+            <input type="number" v-model="props.payment.court_rate" class="input-field">
+          </div>
+        </div>
+
+        <div class="bg-green-100 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Shuttle Fees</h3>
+          <div class="flex flex-col space-y-2">
+            <label class="text-sm font-medium text-gray-600">Shuttles Used</label>
+            <input type="number" v-model="props.payment.shuttle_num" class="input-field">
+            
+            <label class="text-sm font-medium text-gray-600">Price per Shuttle</label>
+            <input type="number" v-model="props.payment.shuttle_rate" class="input-field">
+          </div>
         </div>
       </div>
 
-      <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Update</button>
-    </div>
-  </form>
-  <button @click="deletePayment(payment.id)" class="bg-red-600 rounded-lg text-white p-2">Delete Session</button>
+
+      <div class="bg-green-100 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Total Cost</h3>
+        <div class="flex flex-col space-y-2">
+          <label class="text-sm font-medium text-gray-600">Total Cost</label>
+          <input type="number" v-model="props.payment.total_cost" class="input-field">
+          <label class="text-sm font-medium text-gray-600">Payment Per Person</label>
+          <input type="number" v-model="props.payment.payment_per_person" class="input-field">
+        </div>
+      </div>
+
+
+      <div v-if="playersState.length" class="bg-green-100 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Players</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div v-for="player in playersState" :key="player.id" class="flex items-center space-x-3 p-2 bg-white rounded-md shadow-sm">
+            <input type="checkbox" :checked="player.paid" @change="togglePaid(player.id)" class="form-checkbox text-green-500">
+            <span class="text-gray-700">{{ player.player_name }}</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="flex justify-between mt-6 gap-2">
+        <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
+          Update Payment
+        </button>
+        <button @click="deletePayment(payment.id)" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition">
+          Delete Session
+        </button>
+      </div>
+    </form>
+  </div>
 </template>
+
+<style scoped>
+.input-field {
+  @apply w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-400 focus:outline-none;
+}
+</style>

@@ -2,6 +2,7 @@
 import { defineProps, ref } from 'vue';
 import type { Payment } from '../types/payment';
 import { router } from '@inertiajs/vue3';
+import { format } from 'date-fns';
 
 const props = defineProps<{ payments: Payment[] }>();
 
@@ -13,8 +14,7 @@ const goBack = () => {
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-GB');
+  return format(new Date(dateString), 'dd/MM/yyyy');
 };
 
 const showPayment = (id) => {
