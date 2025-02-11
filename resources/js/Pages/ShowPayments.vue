@@ -43,15 +43,22 @@ const formattedPlayers = computed(() => playersState.value.map(player => ({
 
 
 const updatePayment = () => {
-  router.post(`/payments/${props.payment.id}`, {
-    _method: 'PUT', 
-    court_hours: props.payment.court_hours,
-    court_rate: props.payment.court_rate,
-    shuttle_num: props.payment.shuttle_num,
-    shuttle_rate: props.payment.shuttle_rate,
-    total_cost: props.payment.total_cost,
-    payment_per_person: props.payment.payment_per_person,
-    players: formattedPlayers.value,
+  const payload = {
+    _method: 'PUT',
+    court_hours: paymentState.value.court_hours,
+    court_rate: paymentState.value.court_rate,
+    shuttle_num: paymentState.value.shuttle_num,
+    shuttle_rate: paymentState.value.shuttle_rate,
+    total_cost: paymentState.value.total_cost,
+    payment_per_person: paymentState.value.payment_per_person,
+    players: formattedPlayers.value, 
+  };
+
+  console.log("Sending update payload:", payload); 
+
+  router.post(`/payments/${props.payment.id}`, payload, {
+    onSuccess: () => console.log("Payment updated successfully"),
+    onError: (errors) => console.error("Error updating payment:", errors),
   });
 };
 
@@ -70,7 +77,40 @@ const deletePayment = (id) => {
       },
     });
   }
+
 };
+
+const removePlayer = (playerId: number) => {
+    playersState.value = playersState.value.filter(p => p.id !== playerId);
+    updateTotals();
+  };
+
+const updateTotals = () => {
+
+    const numPlayers = playersState.value.length;
+    
+    if (numPlayers === 0) {
+      paymentState.value.total_cost = 0;
+      paymentState.value.payment_per_person = 0;
+      return;
+    }
+    
+    const courtHours = Number(paymentState.value.court_hours) || 0;
+    const courtRate = Number(paymentState.value.court_rate) || 0;
+    const shuttleNum = Number(paymentState.value.shuttle_num) || 0;
+    const shuttleRate = Number(paymentState.value.shuttle_rate) || 0;
+
+    const courtCost = courtHours * courtRate;
+    const shuttleCost = shuttleNum * shuttleRate;
+    const totalCost = courtCost + shuttleCost;
+
+
+    paymentState.value = {
+      ...paymentState.value,
+      total_cost: totalCost,
+      payment_per_person: totalCost / numPlayers,
+    };
+  };
 
 
 </script>
@@ -97,10 +137,10 @@ const deletePayment = (id) => {
           <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Court Fees</h3>
           <div class="flex flex-col space-y-2">
             <label class="text-sm font-medium text-gray-600">Court Hours</label>
-            <input type="number" v-model="props.payment.court_hours" class="input-field">
+            <input type="number" v-model="paymentState.court_hours" class="input-field">
             
             <label class="text-sm font-medium text-gray-600">Court Rate</label>
-            <input type="number" v-model="props.payment.court_rate" class="input-field">
+            <input type="number" v-model="paymentState.court_rate" class="input-field">
           </div>
         </div>
 
@@ -108,10 +148,10 @@ const deletePayment = (id) => {
           <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Shuttle Fees</h3>
           <div class="flex flex-col space-y-2">
             <label class="text-sm font-medium text-gray-600">Shuttles Used</label>
-            <input type="number" v-model="props.payment.shuttle_num" class="input-field">
+            <input type="number" v-model="paymentState.shuttle_num" class="input-field">
             
             <label class="text-sm font-medium text-gray-600">Price per Shuttle</label>
-            <input type="number" v-model="props.payment.shuttle_rate" class="input-field">
+            <input type="number" v-model="paymentState.shuttle_rate" class="input-field">
           </div>
         </div>
       </div>
@@ -131,9 +171,14 @@ const deletePayment = (id) => {
       <div v-if="playersState.length" class="bg-green-100 p-4 rounded-lg">
         <h3 class="text-lg font-semibold text-gray-700 text-center mb-2">Players</h3>
         <div class="grid grid-cols-2 gap-3">
-          <div v-for="player in playersState" :key="player.id" class="flex items-center space-x-3 p-2 bg-white rounded-md shadow-sm">
-            <input type="checkbox" :checked="player.paid" @change="togglePaid(player.id)" class="form-checkbox text-green-500">
-            <span class="text-gray-700">{{ player.player_name }}</span>
+          <div v-for="player in playersState" :key="player.id" class="flex items-center justify-between p-2 bg-white rounded-md shadow-sm">
+            <div class="flex items-center space-x-3">
+              <input type="checkbox" :checked="player.paid" @change="togglePaid(player.id)" class="form-checkbox text-green-500">
+              <span class="text-gray-700">{{ player.player_name }}</span>
+            </div>
+            <button @click="removePlayer(player.id)" class="text-red-500 hover:text-red-700 transition">
+              ✖ Remove
+            </button>
           </div>
         </div>
       </div>
