@@ -133,7 +133,7 @@ class PaymentController extends Controller
     public function destroy(PaymentModel $payment)
     {
         $payment->delete();
-        return redirect()->route('payments.index');
+        return redirect()->route('home');
     }
 
     public function addPlayer(Request $request, PaymentModel $payment)

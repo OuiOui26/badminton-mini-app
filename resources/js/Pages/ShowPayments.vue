@@ -54,8 +54,6 @@ const updatePayment = () => {
     players: formattedPlayers.value, 
   };
 
-  console.log("Sending update payload:", payload); 
-
   router.post(`/payments/${props.payment.id}`, payload, {
     onSuccess: () => console.log("Payment updated successfully"),
     onError: (errors) => console.error("Error updating payment:", errors),
@@ -188,7 +186,7 @@ const updateTotals = () => {
         <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
           Update Payment
         </button>
-        <button @click="deletePayment(payment.id)" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition">
+        <button @click="deletePayment(payment.id)" type="button" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition">
           Delete Session
         </button>
       </div>
