@@ -13,9 +13,9 @@ const goBack = () => {
   router.visit('/');
 };
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: string) => {
   if (!dateString) return '';
-  return format(new Date(dateString), 'dd/MM/yyyy');
+  return format(new Date(dateString), 'MMM d, yyyy');
 };
 
 const showPayment = (id) => {
@@ -34,7 +34,7 @@ const showPayment = (id) => {
     <h1 class="text-3xl font-bold text-green-700 text-center my-2">Payment List</h1>
   
       <div class="grid grid-cols-2 gap-2 p-4">
-        <div v-for="payment in payments" :key="payment.id" class="border p-4 mt-4 bg-green-600 text-white rounded-lg">
+        <div v-for="payment in payments" :key="payment.id" class="border p-4 mt-4 bg-green-500 text-white rounded-lg">
           <div class="flex justify-between">
             <h2 class="text-lg font-semibold">Session #{{ payment.id }}</h2>
             <h2 class="text-lg font-semibold">Date : {{ formatDate(payment.date) }}</h2>

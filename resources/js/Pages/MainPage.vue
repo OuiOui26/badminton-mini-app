@@ -13,7 +13,7 @@ const goToPlayersListPage = () => {
 </script>
 
 <template>
-  <div class="flex flex-col p-10 justify-center rounded-2xl items-center bg-gradient-to-br from-green-400 to-green-500 w-full max-w-xl mx-auto my-10 shadow-lg">
+  <div class="flex flex-col p-10 justify-center rounded-2xl items-center bg-gradient-to-br from-green-400 to-green-500 w-full max-w-xl mx-auto mt-36 shadow-lg">
     <h1 class="text-3xl font-extrabold text-white drop-shadow-lg">🏸 Badminton Payment Tracker</h1>
 
     <div class="grid grid-cols-1 gap-4 mt-6 w-full">

@@ -7,6 +7,10 @@ const selectedPlayers = ref([]);
 const selectAll = ref(false);
 const searchQuery = ref("");
 
+const props = defineProps({
+  selectedPlayers: Array
+});
+
 const fetchPlayers = async () => {
   try {
     const response = await fetch("/players"); 
@@ -16,7 +20,10 @@ const fetchPlayers = async () => {
   }
 };
 
-onMounted(fetchPlayers);
+onMounted(() => {
+  selectedPlayers.value = [...props.selectedPlayers];
+  fetchPlayers();
+});
 
 const toggleSelectAll = () => {
   if (selectAll.value) {
@@ -50,8 +57,8 @@ const filteredPlayers = computed(() => {
       <input 
         v-model="searchQuery" 
         type="text" 
-        placeholder="Search players" 
-        class="w-full p-2 mb-3 border border-gray-300 rounded"
+        placeholder="Search players..." 
+        class="w-full p-2 border rounded-lg mb-2"
       />
 
       <div v-if="filteredPlayers.length" class="flex items-center space-x-2 p-2 border-b border-gray-300">
@@ -60,13 +67,16 @@ const filteredPlayers = computed(() => {
       </div>
 
 
-      <div v-if="filteredPlayers.length" class="max-h-60 overflow-y-auto">
-        <label v-for="player in filteredPlayers" :key="player.id" class="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer">
+      <div class="max-h-60 overflow-y-auto">
+        <label 
+          v-for="player in filteredPlayers" 
+          :key="player.id" 
+          class="flex items-center space-x-2 p-2 hover:bg-gray-100 cursor-pointer"
+        >
           <input 
             type="checkbox" 
             v-model="selectedPlayers" 
             :value="player" 
-            @change="selectAll = isAllSelected"
           />
           <span>{{ player.player_name }}</span>
         </label>
