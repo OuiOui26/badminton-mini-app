@@ -98,8 +98,19 @@ class PaymentController extends Controller
     {
         $validated = $request->validated();
 
+
         $totalCost = ($validated['court_hours'] * $validated['court_rate']) + ($validated['shuttle_num'] * $validated['shuttle_rate']);
 
+        if (!empty($validated['players'])) {
+            $syncData = [];
+        
+            foreach ($validated['players'] as $playerData) {
+                $syncData[$playerData['id']] = ['paid' => $playerData['paid']];
+            }
+        
+            $payment->players()->sync($syncData);
+        }
+    
         $numPlayers = $payment->players()->count();  
         $paymentPerPerson = $numPlayers > 0 ? $totalCost / $numPlayers : 0;
     
@@ -112,15 +123,7 @@ class PaymentController extends Controller
             'payment_per_person' => $paymentPerPerson,
         ]);
     
-        if (!empty($validated['players'])) {
-            foreach ($validated['players'] as $playerData) {
-                $payment->players()->updateExistingPivot(
-                    $playerData['id'],
-                    ['paid' => $playerData['paid']]
-                );
-            }
-        }
-    
+
         return redirect()->back()->with('success', 'Payment Updated Successfully');
     }
 
