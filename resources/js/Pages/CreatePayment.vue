@@ -15,11 +15,6 @@ const form = useForm({
 const showPlayerModal = ref(false);
 const selectedPlayers = ref([]);
 
-const goBack = () => {
-  router.visit("/");
-};
-
-
 const openPlayerModal = () => {
   showPlayerModal.value = true;
 };
@@ -115,6 +110,6 @@ const submitForm = () => {
     </form>
 
 
-    <PlayerModal v-if="showPlayerModal" @close="showPlayerModal = false" @add-player="addPlayer" />
+    <PlayerModal v-if="showPlayerModal" @close="showPlayerModal = false" @add-player="addPlayer" :selectedPlayers="selectedPlayers" />
   </div>
 </template>

@@ -20,7 +20,7 @@ const closeCreateModal = () => {
 </script>
 
 <template>
-  <div class="w-1/2 flex flex-col mx-auto mt-12 jusity-center items-center mt-4 bg-white p-4 shadow-md rounded-lg">
+  <div class="w-1/3 flex flex-col mx-auto mt-24 jusity-center items-center mt-4 bg-white p-4 shadow-md rounded-lg">
     <div class="flex w-full justify-between">
 
       <BackButton />
@@ -34,8 +34,8 @@ const closeCreateModal = () => {
 
     <div class=" mt-10">
       <div v-if="props.players.length" class=" pl-5 grid grid-cols-4 gap-4">
-      <div v-for="player in props.players" :key="player.id" class="mb-1 p-4 bg-green-200 rounded-lg">
-        <p>{{ player.player_name }}</p>
+      <div v-for="player in props.players" :key="player.id" class="text-center mb-1 p-2 bg-green-200 rounded-lg">
+        <p class="font-semibold">{{ player.player_name }}</p>
       </div>
     </div>
     <p v-else class="text-gray-500">No players added yet.</p>
